@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>위험성 평가 선택</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+    <header>
+        <h1>위험성 평가 유형 선택</h1>
+        <p>진행할 위험성 평가 유형을 선택하세요.</p>
+    </header>
+
+    <section class="button-container">
+        <a href="risk_assessment_regular.html" class="button primary">정기 평가</a>
+        <a href="risk_assessment_special.html" class="button">수시 평가</a>
+    </section>
+
+    <footer>
+        <p>&copy; 온세미로. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

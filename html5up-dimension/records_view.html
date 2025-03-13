@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>제출된 위험성 평가 기록</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .filter-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        select {
+            font-size: 16px;
+            padding: 8px;
+            margin: 5px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            outline: none;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 90%;
+            margin: auto;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 20px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📌 제출된 위험성 평가 기록 조회</h1>
+
+    <!-- 🔹 연도, 월, 평가 유형 선택 필터 -->
+    <div class="filter-container">
+        <label for="year">📅 연도 선택</label>
+        <select id="year"></select>
+
+        <label for="month">📅 월 선택</label>
+        <select id="month">
+            <option value="">-- 월 선택 --</option>
+            <option value="01">1월</option>
+            <option value="02">2월</option>
+            <option value="03">3월</option>
+            <option value="04">4월</option>
+            <option value="05">5월</option>
+            <option value="06">6월</option>
+            <option value="07">7월</option>
+            <option value="08">8월</option>
+            <option value="09">9월</option>
+            <option value="10">10월</option>
+            <option value="11">11월</option>
+            <option value="12">12월</option>
+        </select>
+
+        <label for="evaluationType">📌 평가 유형</label>
+        <select id="evaluationType">
+            <option value="">-- 평가 유형 선택 --</option>
+            <option value="정기">정기 평가</option>
+            <option value="수시">수시 평가</option>
+        </select>
+
+        <div class="button" onclick="filterRecords()">조회</div>
+    </div>
+
+    <!-- 🔹 위험성 평가 기록 테이블 -->
+    <table>
+        <thead>
+            <tr>
+                <th>날짜</th>
+                <th>평가유형</th>
+                <th>작업명</th>
+                <th>위험요인</th>
+                <th>빈도</th>
+                <th>강도</th>
+                <th>중대성</th>
+                <th>예방대책</th>
+                <th>감소 후 빈도</th>
+                <th>감소 후 강도</th>
+                <th>감소 후 중대성</th>
+            </tr>
+        </thead>
+        <tbody id="recordsTableBody">
+            <tr><td colspan="11">📌 연도, 월, 평가 유형을 선택 후 "조회" 버튼을 눌러주세요.</td></tr>
+        </tbody>
+    </table>
+
+    <a href="risk_select.html" class="button">뒤로 가기</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const yearSelect = document.getElementById("year");
+            const currentYear = new Date().getFullYear();
+
+            // 최근 10년치 추가
+            for (let i = currentYear; i >= currentYear - 10; i--) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.textContent = i + "년";
+                yearSelect.appendChild(option);
+            }
+        });
+
+        function filterRecords() {
+            const selectedYear = document.getElementById("year").value;
+            const selectedMonth = document.getElementById("month").value;
+            const selectedType = document.getElementById("evaluationType").value;
+            const recordsTable = document.getElementById("recordsTableBody");
+
+            if (!selectedYear || !selectedMonth || !selectedType) {
+                recordsTable.innerHTML = "<tr><td colspan='11'>⚠️ 연도, 월, 평가 유형을 모두 선택해주세요.</td></tr>";
+                return;
+            }
+
+            // 로컬스토리지에서 평가 기록 가져오기
+            let records = JSON.parse(localStorage.getItem("riskRecords")) || [];
+            recordsTable.innerHTML = ""; // 테이블 초기화
+
+            const filteredRecords = records.filter(record => {
+                return record.date.startsWith(`${selectedYear}-${selectedMonth}`) && record.evaluationType === selectedType;
+            });
+
+            if (filteredRecords.length === 0) {
+                recordsTable.innerHTML = "<tr><td colspan='11'>⚠️ 해당 기간의 평가 기록이 없습니다.</td></tr>";
+                return;
+            }
+
+            filteredRecords.forEach(record => {
+                let row = `<tr>
+                    <td>${record.date}</td>
+                    <td>${record.evaluationType}</td>
+                    <td>${record.task}</td>
+                    <td>${record.hazard}</td>
+                    <td>${record.frequency}</td>
+                    <td>${record.severity}</td>
+                    <td>${record.riskLevel}</td>
+                    <td>${record.controlMeasures}</td>
+                    <td>${record.reducedFrequency}</td>
+                    <td>${record.reducedSeverity}</td>
+                    <td>${record.reducedRiskLevel}</td>
+                </tr>`;
+                recordsTable.innerHTML += row;
+            });
+        }
+    </script>
+
+</body>
+</html>

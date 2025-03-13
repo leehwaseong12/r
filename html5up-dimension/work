@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>아차사고 발굴 보고서</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        input[type="date"], input[type="text"], select, textarea {
+            color: #000000;
+            background-color: #ffffff !important;
+            font-size: 14px;
+            padding: 4px;
+            border: 1px solid #007bff;
+            border-radius: 3px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid #007bff;
+            background-color: #ffffff !important;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            max-width: 90%;
+            padding: 25px;
+            background: white;
+            border: 1px solid #007bff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: left;
+            color: black;
+            line-height: 1.6;
+        }
+
+        .popup strong {
+            color: black;
+            font-weight: bold;
+            font-size: 18px;
+            display: block;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .popup p {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .popup span {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .popup button {
+            margin-top: 15px;
+            padding: 8px 12px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 120px;
+            margin: 15px auto;
+            font-size: 14px;
+        }
+
+        .popup button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>아차사고 발굴 보고서</h1>
+        <div style="text-align: right;">
+            <button onclick="togglePopup('causePopup')">⚠️ 기인물 예시</button>
+            <button onclick="togglePopup('accidentPopup')">💥 재해 형태 예시</button>
+        </div>
+    </header>
+
+    <section>
+        <form id="nearMissForm">
+            <div class="field">
+                <label for="date">📅 작성 날짜</label>
+                <input type="date" name="date" id="date" required>
+            </div>
+
+            <div class="field">
+                <label for="name">👤 성함</label>
+                <input type="text" name="name" id="name" required>
+            </div>
+
+            <div class="field">
+                <label for="location">📍 장소</label>
+                <input type="text" name="location" id="location" required>
+            </div>
+
+            <div class="field">
+                <label for="cause">⚠️ 기인물</label>
+                <input type="text" name="cause" id="cause" required>
+            </div>
+
+            <div class="field">
+                <label for="accident">💥 재해형태</label>
+                <input type="text" name="accident" id="accident" required>
+            </div>
+
+            <div class="field">
+                <label for="reason">🔍 원인</label>
+                <textarea name="reason" id="reason" rows="3" required></textarea>
+            </div>
+
+            <div class="field">
+                <label for="prevention">🔧 시정 및 예방조치</label>
+                <textarea name="prevention" id="prevention" rows="3" required></textarea>
+            </div>
+
+            <div class="button-container">
+                <button type="submit" class="button submit-button">제출</button>
+            </div>
+        </form>
+    </section>
+
+    <script>
+        function togglePopup(id) {
+            let popup = document.getElementById(id);
+            popup.style.display = popup.style.display === "block" ? "none" : "block";
+        }
+    </script>
+
+</body>
+</html>
