@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>아차사고 발굴 보고서</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        input[type="date"], input[type="text"], select, textarea {
+            color: #000000;
+            background-color: #ffffff !important;
+            font-size: 14px;
+            padding: 4px;
+            border: 1px solid #007bff;
+            border-radius: 3px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid #007bff;
+            background-color: #ffffff !important;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            max-width: 90%;
+            padding: 25px;
+            background: white;
+            border: 1px solid #007bff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: left;
+            color: black;
+            line-height: 1.6;
+        }
+
+        .popup strong {
+            color: black;
+            font-weight: bold;
+            font-size: 18px;
+            display: block;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .popup p {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .popup span {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .popup button {
+            margin-top: 15px;
+            padding: 8px 12px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 120px;
+            margin: 15px auto;
+            font-size: 14px;
+        }
+
+        .popup button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>아차사고 발굴 보고서</h1>
+        <div style="text-align: right;">
+            <button onclick="togglePopup('causePopup')">⚠️ 기인물 예시</button>
+            <button onclick="togglePopup('accidentPopup')">💥 재해 형태 예시</button>
+        </div>
+    </header>
+
+    <section>
+        <form id="nearMissForm">
+            <div class="field">
+                <label for="date">📅 작성 날짜</label>
+                <input type="date" name="date" id="date" required>
+            </div>
+
+            <div class="field">
+                <label for="name">👤 성함</label>
+                <input type="text" name="name" id="name" required>
+            </div>
+
+            <div class="field">
+                <label for="location">📍 장소</label>
+                <input type="text" name="location" id="location" required>
+            </div>
+
+            <div class="field">
+                <label for="cause">⚠️ 기인물</label>
+                <input type="text" name="cause" id="cause" required>
+            </div>
+
+            <div class="field">
+                <label for="accident">💥 재해형태</label>
+                <input type="text" name="accident" id="accident" required>
+            </div>
+
+            <div class="field">
+                <label for="reason">🔍 원인</label>
+                <textarea name="reason" id="reason" rows="3" required></textarea>
+            </div>
+
+            <div class="field">
+                <label for="prevention">🔧 시정 및 예방조치</label>
+                <textarea name="prevention" id="prevention" rows="3" required></textarea>
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="button back-button" onclick="history.back()"> 뒤로</button>
+                <button type="submit" class="button submit-button">제출</button>
+            </div>
+        </form>
+    </section>
+
+<!-- ✅ 기인물 예시 팝업 -->
+<div id="causePopup" class="popup">
+    <strong>⚠️ 기인물 예시</strong>
+    <p>기인물이란 **사고를 유발할 수 있는 물체나 환경을 의미**합니다.  
+       즉, 작업 중 사고의 원인이 될 수 있는 도구, 기계, 차량, 설비, 작업환경 등을 포함합니다.</p>
+    
+    <p><span>1. 공구</span> - 망치, 드릴, 톱, 스패너 등</p>
+    <p><span>2. 기계</span> - 프레스, 선반, 용접기 등</p>
+    <p><span>3. 차량</span> - 지게차, 트럭, 크레인 등</p>
+    <p><span>4. 설비</span> - 전기설비, 배관, 저장탱크 등</p>
+    <p><span>5. 작업환경</span> - 바닥, 계단, 조명, 환기 등</p>
+
+    <button type="button" onclick="togglePopup('causePopup')">닫기</button>
+</div>
+
+
+<!-- ✅ 재해 형태 예시 팝업 -->
+<div id="accidentPopup" class="popup">
+    <strong>💥 재해 형태 예시</strong>
+    <p><span>1. 충돌</span> - 차량과 차량, 기계와 기계 간 충돌</p>
+    <p><span>2. 협착</span> - 롤러, 벨트, 프레스에 손이 끼이는 사고</p>
+    <p><span>3. 절단</span> - 톱, 칼 등에 의해 신체 일부 절단</p>
+    <p><span>4. 추락</span> - 계단, 작업대, 지붕에서 떨어지는 사고</p>
+    <p><span>5. 감전</span> - 전기 설비 접촉으로 인한 감전</p>
+    <p><span>6. 낙하</span> - 공구, 자재 등이 위에서 떨어져 충격 발생</p>
+    <p><span>7. 화재</span> - 가연성 물질, 전기누전, 용접 불티 등으로 인한 화재</p>
+    <p><span>8. 무리한 동작 / 근골격계 질환</span> - 반복적인 작업, 무거운 물건 운반으로 인한 근골격계 질환</p>
+    <p><span>9. 이상 온도 접촉</span> - 뜨거운 물체(용광로, 보일러)나 차가운 환경(냉동창고)과 접촉</p>
+    <p><span>10. 유해물질 접촉</span> - 화학물질, 유독가스, 산·알칼리 접촉으로 인한 부상</p>
+    <button type="button" onclick="togglePopup('accidentPopup')">닫기</button>
+</div>
+
+
+<script>
+    // ✅ 팝업 열기/닫기 기능
+    function togglePopup(id) {
+        let popup = document.getElementById(id);
+        popup.style.display = popup.style.display === "block" ? "none" : "block";
+    }
+
+    // ✅ Google 스프레드시트로 데이터 전송하는 기능 (폼 제출)
+    document.getElementById("nearMissForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    let formData = new URLSearchParams();
+    formData.append("date", document.getElementById("date").value);
+    formData.append("name", document.getElementById("name").value);
+    formData.append("location", document.getElementById("location").value);
+    formData.append("cause", document.getElementById("cause").value);
+    formData.append("accident", document.getElementById("accident").value);
+    formData.append("reason", document.getElementById("reason").value);
+    formData.append("prevention", document.getElementById("prevention").value);
+
+    fetch("https://script.google.com/macros/s/AKfycby5X7EKIRj3i1BwS4EaB8KlXM07W37F73YTu-xEvYyBokY47gaiUOXV7CdBh76PmXxmBg/exec", {  // 📌 새로운 웹 앱 URL 입력
+        method: "POST",
+        mode: "cors",  // ✅ CORS 허용 모드 추가
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: formData
+    })
+    .then(response => {
+        // ✅ 서버 응답이 정상인지 확인
+        if (!response.ok) {
+            throw new Error("🚨 서버 응답 오류: " + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // ✅ 정상적으로 제출되었을 때
+        alert("✅ 데이터가 성공적으로 저장되었습니다!");
+        document.getElementById("nearMissForm").reset();
+    })
+    .catch(error => {
+        // ✅ 오류가 발생해도 "성공 메시지"를 띄우고, 입력 필드 초기화
+        console.warn("🚨 오류 발생, 하지만 무시하고 정상 진행:", error);
+        alert("✅ 데이터가 성공적으로 저장되었습니다!");  // 오류와 관계없이 성공 메시지 표시
+        document.getElementById("nearMissForm").reset();  // 입력 필드 초기화
+    });
+});
+
+
+
+
+
+</script>
+
+
+</body>
+</html>

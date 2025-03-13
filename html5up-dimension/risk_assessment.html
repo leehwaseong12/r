@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>위험성 평가 작성</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+    <header>
+        <h1>위험성 평가 작성 (5×3 빈도-강도법)</h1>
+    </header>
+
+    <section>
+        <form id="riskForm" method="post" action="submit_risk.php">
+            <div class="field">
+                <label for="task">🔹 작업명</label>
+                <input type="text" name="task" id="task" required>
+            </div>
+
+            <div class="field">
+                <label for="hazard">⚠️ 위험요인</label>
+                <input type="text" name="hazard" id="hazard" required>
+            </div>
+
+            <div class="field">
+                <label for="frequency">📌 빈도 (Frequency, F)</label>
+                <select name="frequency" id="frequency" required>
+                    <option value="1">1 - 거의 없음</option>
+                    <option value="2">2 - 드물게 발생</option>
+                    <option value="3">3 - 가끔 발생</option>
+                    <option value="4">4 - 자주 발생</option>
+                    <option value="5">5 - 매우 자주 발생</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="severity">⚡ 강도 (Severity, S)</label>
+                <select name="severity" id="severity" required>
+                    <option value="1">1 - 경미한 부상</option>
+                    <option value="2">2 - 중간 수준 부상</option>
+                    <option value="3">3 - 치명적인 부상</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="risk_level">🚦 위험도 (자동 계산)</label>
+                <input type="text" id="risk_level" name="risk_level" readonly>
+            </div>
+
+            <div class="field">
+                <label for="control_measures">✅ 예방 대책</label>
+                <textarea name="control_measures" id="control_measures" rows="4" required></textarea>
+            </div>
+
+            <ul class="actions">
+                <li><input type="submit" value="제출" class="primary"></li>
+            </ul>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 온세미로. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("frequency").addEventListener("change", calculateRisk);
+        document.getElementById("severity").addEventListener("change", calculateRisk);
+
+        function calculateRisk() {
+            var frequency = parseInt(document.getElementById("frequency").value);
+            var severity = parseInt(document.getElementById("severity").value);
+            var risk = frequency * severity;
+            var riskText = "";
+
+            if (risk >= 10) {
+                riskText = "🔴 높은 위험 (High)";
+            } else if (risk >= 4) {
+                riskText = "🟠 중간 위험 (Medium)";
+            } else {
+                riskText = "🟢 낮은 위험 (Low)";
+            }
+
+            document.getElementById("risk_level").value = risk + " (" + riskText + ")";
+        }
+    </script>
+
+</body>
+</html>

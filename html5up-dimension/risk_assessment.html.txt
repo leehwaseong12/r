@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>위험성 평가 작성</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+    <header>
+        <h1>위험성 평가 작성</h1>
+    </header>
+
+    <section>
+        <form id="riskForm" method="post" action="submit_risk.php">
+            <div class="field">
+                <label for="task">작업명</label>
+                <input type="text" name="task" id="task" required>
+            </div>
+
+            <div class="field">
+                <label for="hazard">위험요인</label>
+                <input type="text" name="hazard" id="hazard" required>
+            </div>
+
+            <div class="field">
+                <label for="risk_level">위험도</label>
+                <select name="risk_level" id="risk_level">
+                    <option value="low">낮음</option>
+                    <option value="medium">중간</option>
+                    <option value="high">높음</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="control_measures">대책</label>
+                <textarea name="control_measures" id="control_measures" rows="4" required></textarea>
+            </div>
+
+            <ul class="actions">
+                <li><input type="submit" value="제출" class="primary"></li>
+            </ul>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 온세미로. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
