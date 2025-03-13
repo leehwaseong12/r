@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>정기 위험성 평가</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        input[type="date"], input[type="text"], select, textarea {
+            color: #000000;
+            background-color: #ffffff !important;
+            font-size: 14px;
+            padding: 4px;
+            border: 1px solid #007bff;
+            border-radius: 3px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid #007bff;
+            background-color: #ffffff !important;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px; /* 기존 400px → 450px로 확대 */
+    max-width: 90%;
+    padding: 25px;
+    background: white;
+    border: 1px solid #007bff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: left; /* 텍스트를 왼쪽 정렬 */
+    color: black;
+    line-height: 1.6; /* 줄 간격 증가 */
+}
+
+/* 제목 스타일 개선 */
+.popup strong {
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 15px;
+    text-align: center; /* 제목 중앙 정렬 */
+}
+
+/* 본문 내용 가독성 향상 */
+.popup p {
+    font-size: 15px; /* 글씨 크기 살짝 키움 */
+    margin-bottom: 10px; /* 문단 간 간격 추가 */
+}
+
+/* 숫자 강조 */
+.popup span {
+    font-weight: bold;
+    color: #007bff; /* 강조 색상 추가 */
+}
+
+/* 닫기 버튼 스타일 */
+.popup button {
+    margin-top: 15px;
+    padding: 8px 12px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    margin: 15px auto;
+    font-size: 14px;
+}
+
+.popup button:hover {
+    background: #0056b3;
+}
+
+
+
+
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>정기 위험성 평가 (5×4 빈도-강도법)</h1>
+        <div style="text-align: right;">
+            <button onclick="togglePopup('severityPopup')">⚡ 강도 설명</button>
+            <button onclick="togglePopup('frequencyPopup')">📌 빈도 설명</button>
+
+        </div>
+    </header>
+
+
+    
+    <section>
+        <form id="riskForm">
+            <input type="hidden" name="evaluation_type" value="정기">
+
+            <div class="field">
+                <label for="date">📅 작성 날짜</label>
+                <input type="date" name="date" id="date" required>
+            </div>
+
+            <div class="field">
+                <label for="name">👤 성함</label>
+                <input type="text" name="name" id="name" placeholder="이름 입력" required>
+            </div>
+
+            <div class="field">
+                <label for="location">📍 현장 위치</label>
+                <input type="text" name="location" id="location" placeholder="예: P3 Line 2F C121 Ba" required>
+            </div>
+
+            <div class="field">
+                <label for="task">🔹 작업명</label>
+                <input type="text" name="task" id="task" required>
+            </div>
+
+            <div class="field">
+                <label for="hazard">⚠️ 위험요인</label>
+                <input type="text" name="hazard" id="hazard" required>
+            </div>
+
+            <div class="field">
+                <label for="frequency">📌 빈도</label>
+                <select name="frequency" id="frequency" required onchange="calculateRisk()">
+                    <option value="" disabled selected>-- 선택 --</option>
+                    <option value="5">5 - 매우 높음</option>
+                    <option value="4">4 - 높음</option>
+                    <option value="3">3 - 보통</option>
+                    <option value="2">2 - 낮음</option>
+                    <option value="1">1 - 매우 낮음</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="severity">⚡ 강도</label>
+                <select name="severity" id="severity" required onchange="calculateRisk()">
+                    <option value="" disabled selected>-- 선택 --</option>
+                    <option value="4">4 - 사망</option>
+                    <option value="3">3 - 장해발생</option>
+                    <option value="2">2 - 병원치료</option>
+                    <option value="1">1 - 비치료</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="risk_level">🚦 중대성 (자동 계산)</label>
+                <input type="text" id="risk_level" name="risk_level" readonly>
+            </div>
+
+            <div class="field">
+                <label for="reduction_measures">🔧 감소 대책</label>
+                <textarea name="reduction_measures" id="reduction_measures" rows="3" required></textarea>
+            </div>
+
+            <div id="severityPopup" class="popup">
+                <strong>⚡ 강도 설명</strong>
+            
+                <p><span>4 - 사망 또는 영구적 근로불능</span><br>
+                업무 복귀가 불가능한 장애가 남는 부상 또는 질병.</p>
+            
+                <p><span>3 - 중대한 부상 또는 질병</span><br>
+                일정 시점에서 업무에 복귀(완치) 가능하지만, 휴업을 수반하는 부상 또는 질병.</p>
+            
+                <p><span>2 - 치료가 필요하지만 휴업 없음</span><br>
+                응급조치 이상의 치료가 필요하지만, 휴업 없이 업무를 지속할 수 있는 부상 또는 질병.</p>
+            
+                <p><span>1 - 경미한 부상 또는 질병</span><br>
+                처치(치료) 후 바로 원래 작업을 수행할 수 있으며, 업무에 전혀 지장이 없음.</p>
+            
+                <button type="button" onclick="togglePopup('severityPopup')">닫기</button>
+
+            </div>
+            
+            
+            <div id="frequencyPopup" class="popup">
+                <strong>📌 빈도 설명</strong>
+            
+                <p><span>5 - 피해가 발생할 가능성이 매우 높음</span><br>
+                해당 안전대책이 되어 있지 않고, 표시표지가 있어도 불비(不備)가 많으며, 안전수칙 작업표준 등도 없음.</p>
+            
+                <p><span>4 - 피해가 발생할 가능성이 높음</span><br>
+                가드방호덮개, 기타 안전장치가 없거나 상당한 불비(不備)가 있고, 비상정지장치, 표시표지는 웬만큼 설치되어 있으며, 안전수칙 작업표준 등은 있지만 지키기 어렵고 많은 주의를 해야 함.</p>
+            
+                <p><span>3 - 부주의하면 피해가 발생할 가능성이 있음</span><br>
+                가드방호덮개 또는 안전장치 등은 설치되어 있지만, 가드가 낮거나 간격이 벌어져 있는 등 불비(不備)가 있고, 위험영역 접근, 위험원과의 접촉이 있을 수 있으며, 안전수칙 작업표준 등은 있지만 일부 준수하기 어려운 점이 있음.</p>
+            
+                <p><span>2 - 피해가 발생할 가능성이 낮음</span><br>
+                가드방호덮개 등으로 보호되어 있고, 안전장치가 설치되어 있으며, 위험영역에 출입이 곤란한 상태이고, 안전수칙 작업표준 등이 정비되어 있고 준수하기 쉬우나, 피해의 가능성이 남아있음.</p>
+            
+                <p><span>1 - 피해가 발생할 가능성이 없음</span><br>
+                가드방호덮개 등으로 둘러싸여 있고 안전장치가 설치되어 있으며, 위험영역에 출입이 곤란한 상태 등 전반적으로 안전조치가 잘 되어있음.</p>
+            
+                <button type="button" onclick="togglePopup('frequencyPopup')">닫기</button>
+
+            </div>
+            
+            
+
+            <div class="field">
+                <label for="reduced_frequency">📌 감소 후 빈도</label>
+                <select name="reduced_frequency" id="reduced_frequency" required onchange="calculateReducedRisk()">
+                    <option value="" disabled selected>-- 선택 --</option>
+                    <option value="5">5 - 매우 높음</option>
+                    <option value="4">4 - 높음</option>
+                    <option value="3">3 - 보통</option>
+                    <option value="2">2 - 낮음</option>
+                    <option value="1">1 - 매우 낮음</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="reduced_severity">⚡ 감소 후 강도</label>
+                <select name="reduced_severity" id="reduced_severity" required onchange="calculateReducedRisk()">
+                    <option value="" disabled selected>-- 선택 --</option>
+                    <option value="4">4 - 사망</option>
+                    <option value="3">3 - 장해발생</option>
+                    <option value="2">2 - 병원치료</option>
+                    <option value="1">1 - 비치료</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="reduced_risk_level">🚦 감소 후 중대성 (자동 계산)</label>
+                <input type="text" id="reduced_risk_level" name="reduced_risk_level" readonly>
+            </div>
+
+
+            <div class="button-container">
+                <button type="button" class="button back-button" onclick="history.back()">이전</button>
+                <button type="submit" class="button submit-button">제출</button>
+            </div>
+            
+        </form>
+    </section>
+
+
+    
+    <script>
+        function calculateRisk() {
+            let freq = parseInt(document.getElementById("frequency").value) || 0;
+            let sev = parseInt(document.getElementById("severity").value) || 0;
+            document.getElementById("risk_level").value = freq * sev || "";
+        }
+    
+        function calculateReducedRisk() {
+            let redFreq = parseInt(document.getElementById("reduced_frequency").value) || 0;
+            let redSev = parseInt(document.getElementById("reduced_severity").value) || 0;
+            document.getElementById("reduced_risk_level").value = redFreq * redSev || "";
+        }
+    
+        document.getElementById("riskForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let formData = new FormData(event.target);
+            fetch("https://script.google.com/macros/s/AKfycbyHb9GiURb6lJc8lsQyZyT4jjCcny8U_plXJnFBbx1qz8D54tXBi_hHcZsgdT1IHLAc/exec", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(() => {
+                alert("✅ 위험성 평가가 제출되었습니다!");
+                event.target.reset();
+            });
+        });
+    
+        function togglePopup(id) {
+            let popup = document.getElementById(id);
+            if (popup) {
+                popup.style.display = popup.style.display === "block" ? "none" : "block";
+            }
+        }
+    </script>
+    
+
+</body>
+</html>

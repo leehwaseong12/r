@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>정기 위험성 평가</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+    <header>
+        <h1>정기 위험성 평가 (5×4 빈도-강도법)</h1>
+    </header>
+
+    <section>
+        <form id="riskForm" method="post" action="submit_risk.php">
+            <input type="hidden" name="evaluation_type" value="수시">  <!-- 정기 평가 구분 -->
+            <div class="field">
+                <label for="task">🔹 작업명</label>
+                <input type="text" name="task" id="task" required>
+            </div>
+
+            <div class="field">
+                <label for="hazard">⚠️ 위험요인</label>
+                <input type="text" name="hazard" id="hazard" required>
+            </div>
+
+            <div class="field">
+                <label for="possibility">📌 가능성</label>
+                <select name="possibility" id="possibility" required>
+                    <option value="5">5 - 매우 높음</option>
+                    <option value="4">4 - 높음</option>
+                    <option value="3">3 - 보통</option>
+                    <option value="2">2 - 낮음</option>
+                    <option value="1">1 - 매우 낮음</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="severity">⚡ 중대성</label>
+                <select name="severity" id="severity" required>
+                    <option value="4">4 - 사망</option>
+                    <option value="3">3 - 장해발생</option>
+                    <option value="2">2 - 병원치료</option>
+                    <option value="1">1 - 비치료</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="risk_level">🚦 위험도 (자동 계산)</label>
+                <input type="text" id="risk_level" name="risk_level" readonly>
+            </div>
+
+            <div class="field">
+                <label for="control_measures">✅ 예방 대책</label>
+                <textarea name="control_measures" id="control_measures" rows="4" required></textarea>
+            </div>
+
+            <ul class="actions">
+                <li><input type="submit" value="제출" class="primary"></li>
+            </ul>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 온세미로. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("possibility").addEventListener("change", calculateRisk);
+        document.getElementById("severity").addEventListener("change", calculateRisk);
+
+        function calculateRisk() {
+            var possibility = parseInt(document.getElementById("possibility").value);
+            var severity = parseInt(document.getElementById("severity").value);
+            var risk = possibility * severity;
+            var riskText = "";
+
+            if (risk >= 15) {
+                riskText = "🔴 높은 위험 (High)";
+            } else if (risk >= 6) {
+                riskText = "🟠 중간 위험 (Medium)";
+            } else {
+                riskText = "🟢 낮은 위험 (Low)";
+            }
+
+            document.getElementById("risk_level").value = risk + " (" + riskText + ")";
+        }
+    </script>
+
+</body>
+</html>
