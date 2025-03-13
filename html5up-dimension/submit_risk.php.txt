@@ -1,0 +1,32 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "password";
+$dbname = "safety_db";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("연결 실패: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $evaluation_type = $_POST["evaluation_type"];
+    $task = $_POST["task"];
+    $hazard = $_POST["hazard"];
+    $possibility = $_POST["possibility"];
+    $severity = $_POST["severity"];
+    $risk_level = $_POST["risk_level"];
+    $control_measures = $_POST["control_measures"];
+
+    $sql = "INSERT INTO risk_assessment (evaluation_type, task, hazard, possibility, severity, risk_level, control_measures) 
+            VALUES ('$evaluation_type', '$task', '$hazard', '$possibility', '$severity', '$risk_level', '$control_measures')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "위험성 평가가 저장되었습니다!";
+    } else {
+        echo "오류: " . $conn->error;
+    }
+
+    $conn->close();
+}
+?>
